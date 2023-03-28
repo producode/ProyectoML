@@ -10,8 +10,13 @@ result = csv_file.iloc[:70, 0].to_numpy(dtype=float)
 ejemplo_prediccion = csv_file.iloc[71, 1:].to_numpy(dtype=float)
 print(ejemplo_prediccion)
 
-capas = tf.keras.layers.Dense(units=42, input_shape=[42])
-modelo = tf.keras.Sequential([capas])
+inputTest = [[2.0, 3.0], [8.0, 10.0], [1.0, 9.0], [7.0, 8.0], [5.0, 4.0]]
+outputTest = np.array([6.0, 80.0, 9.0, 56.0, 20.0], dtype=float)
+
+capas = tf.keras.layers.Dense(units=6, input_shape=[2])
+oculta1 = tf.keras.layers.Dense(units=5)
+salida = tf.keras.layers.Dense(units=1)
+modelo = tf.keras.Sequential([capas, oculta1, salida])
 
 modelo.compile(
     optimizer=tf.keras.optimizers.Adam(0.1),
@@ -19,12 +24,12 @@ modelo.compile(
 )
 
 print("Entrenando...")
-historial=modelo.fit(stockData, result, epochs=100, verbose=False)
+historial=modelo.fit(inputTest, outputTest, epochs=1000, verbose=False)
 print("Finalizado")
 
 plt.xlabel("# epoch")
 plt.ylabel("Magnitud perdida")
 plt.plot(historial.history["loss"])
 
-prediccion = modelo.predict(ejemplo_prediccion)
+prediccion = modelo.predict([3.0])
 print(prediccion)
